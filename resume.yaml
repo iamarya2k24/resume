@@ -15,8 +15,8 @@ content:
   basics:
     name: Arya Navneet (She/Her)
     headline: Cloud Solutions Architect & Consultant 
-    phone: "+91 8220305497"
-    email: n.arya2k21@gmail.com
+    phone: "+91 8866015116"
+    email: n.arya2k21+gh@gmail.com
     url: https://iamarya2k24.github.io/
     # All summary fields supports a limited rich text capabilities in markdown
     # syntax:
@@ -28,11 +28,11 @@ content:
     summary: |
       - I am a results-oriented IT Consultant and Solution Architect with over 7 years of experience specializing in designing, implementing, migrating, and managing robust, scalable, and cost-efficient cloud infrastructures. My expertise spans IT infrastructure management, Linux systems administration, and delivering tailored cloud solutions for global clients.
   location:
-    address: Chrompet
-    city: Chennai
-    region: Tamil Nadu
+    address: Shaikpet
+    city: Hyderabad
+    region: Telangana
     country: India
-    postalCode: "600044"
+    postalCode: "500008"
   profiles:
     - network: LinkedIn
       url: https://www.linkedin.com/in/meta-arya/
@@ -279,8 +279,9 @@ content:
       url: null
       position: Volunteer
       startDate: Jun 2024 
+      endDate: Oct 2024
       summary: |
-        - I am part of Hunger Heroes and climate action team!
+        - I was part of Hunger Heroes and climate action team!
         - climate action - Understand city planning and make efforts to make cities people-centric and bicycle/pedestrian accessible. Make them green by reducing car dependency.
 
 layout:
