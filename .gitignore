@@ -1,0 +1,9 @@
+# Generated at build time by scripts/generate_seo.py and the GitHub Actions
+# workflow — never hand-edit or commit these. resume.yaml is the source of
+# truth; these are always regenerated fresh on deploy.
+/robots.txt
+/sitemap.xml
+/llms.txt
+/build-info.json
+__pycache__/
+*.pyc

@@ -3,8 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="index, follow" />
+<!-- SEO:META -->
 <title>Résumé</title>
 <meta name="description" content="Résumé." />
+<!-- /SEO:META -->
+<!-- SEO:JSONLD -->
+<!-- /SEO:JSONLD -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="favicon.ico" sizes="any" />
+<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="favicon-16x16.png" sizes="16x16" type="image/png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="manifest" href="site.webmanifest" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
@@ -12,6 +23,12 @@
 <body>
 
 <div id="state" role="status" aria-live="polite">Loading resume.yaml…</div>
+
+<noscript>
+  <p>This résumé renders with JavaScript. For a plain-text version readable
+  without a script engine, see <a href="resume.yaml">resume.yaml</a> or
+  <a href="llms.txt">llms.txt</a>.</p>
+</noscript>
 
 <main class="sheet" id="resume" hidden></main>
 
@@ -302,7 +319,6 @@ function renderReferences(references) {
 }
 
 function renderFooter(basics, buildInfo) {
-  const year = new Date().getFullYear();
   let buildBit = "Rendered from resume.yaml";
   if (buildInfo && buildInfo.sha) {
     const link = buildInfo.repo
