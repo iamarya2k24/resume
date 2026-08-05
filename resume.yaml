@@ -1,0 +1,301 @@
+# yaml-language-server: $schema=https://yamlresume.dev/schema.json
+#
+# YAMLResume provides a builtin schema to validate resumes and help avoid lots
+# of low level mistakes.
+#
+# You need to install https://github.com/redhat-developer/yaml-language-server
+# in order to get the best editing experience in your choice of editor/IDE.
+#
+# ref:
+# - https://yamlresume.dev/docs/compiler/schema
+# - https://yamlresume.dev/docs/compiler/schema/json
+
+---
+content:
+  basics:
+    name: Arya Navneet (She/Her)
+    headline: Cloud Solutions Architect & Consultant 
+    phone: "+91 8220305497"
+    email: n.arya2k21@gmail.com
+    url: https://iamarya2k24.github.io/
+    # All summary fields supports a limited rich text capabilities in markdown
+    # syntax:
+    #
+    # - bold, (e.g, `**bold**`)
+    # - italic, (e.g, `*italic*`)
+    # - ordered list, unordored list and nested sub list
+    # - links (e.g. `[link](https://ppresume.com)`)
+    summary: |
+      - I am a results-oriented IT Consultant and Solution Architect with over 7 years of experience specializing in designing, implementing, migrating, and managing robust, scalable, and cost-efficient cloud infrastructures. My expertise spans IT infrastructure management, Linux systems administration, and delivering tailored cloud solutions for global clients.
+  location:
+    address: Chrompet
+    city: Chennai
+    region: Tamil Nadu
+    country: India
+    postalCode: "600044"
+  profiles:
+    - network: LinkedIn
+      url: https://www.linkedin.com/in/meta-arya/
+      username: meta-arya
+    - network: GitHub
+      url: https://github.com/iamarya2k24
+      username: iamarya2k24
+  education:
+    - institution: Nirman High School - CBSE
+      url: 
+      # Valid degree options:
+      #
+      # - 'Middle School'
+      # - 'High School'
+      # - 'Diploma'
+      # - 'Associate'
+      # - 'Bachelor'
+      # - 'Master'
+      # - 'Doctor'
+      degree: High School
+      area: 10th STD
+      score: ""
+      # Should be a valid date string that can be parsed by `new Date(dateStr)`
+      # in JavaScript, eg. '2020-01', '2020-02-03', 'Jul 1, 2023' etc.
+      #
+      # The date part would be removed in the final output as most of the time
+      # people won't really care about the exact date for your working
+      # experience or education background, etc.
+      # ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+      startDate: May 1, 2012
+      # Leave endDate blank to indicate "Present"
+      endDate: Jul 1, 2013
+      courses: []
+      summary: []
+    - institution: Divine Child High School - CBSE
+      url: 
+      # Valid degree options:
+      #
+      # - 'Middle School'
+      # - 'High School'
+      # - 'Diploma'
+      # - 'Associate'
+      # - 'Bachelor'
+      # - 'Master'
+      # - 'Doctor'
+      degree: High School
+      area: 12th STD
+      score: ""
+      # Should be a valid date string that can be parsed by `new Date(dateStr)`
+      # in JavaScript, eg. '2020-01', '2020-02-03', 'Jul 1, 2023' etc.
+      #
+      # The date part would be removed in the final output as most of the time
+      # people won't really care about the exact date for your working
+      # experience or education background, etc.
+      # ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+      startDate: May 1, 2014
+      # Leave endDate blank to indicate "Present"
+      endDate: Jul 1, 2015
+      courses: []
+      summary: []      
+  work:
+    - name: FOUNDEVER CRM INDIA PRIVATE LIMITED
+      url: https://www.foundever.com
+      startDate: 28th July 2025
+      endDate: 19th Sept 2025
+      position: Customer Service Professional
+      summary: |
+        - Worked for United Healthcare (Client)
+        - Followed HIPAA and other compliances and answered the members queries and assited them with resolution.
+      keywords:
+        - Customer support
+        - HIPAA
+        - US Healthcare  
+    - name: Synchrony International Services Private Limited
+      url: https://www.synchrony.com/
+      startDate: 21-Aug-2024
+      endDate: 15-Jan-2025
+      position: Senior Representative, Customer Solutions
+      summary: |
+        - Worked as a backend representative and managed high risk legal requests from bank customers.
+        - Conducted C&D as per the bank policy and legal framework.
+      keywords:
+        - Customer support
+        - Finance
+        - Process Legal Requests  
+    - name: Bitsflippin, Inc
+      url: https://www.bitsflippin.xyz
+      startDate: July 1, 2024
+      endDate:
+      position: Freelance Cloud Consultant & Trainer
+      summary: |
+        - Cloud Strategy & Architecture (AWS, Azure): Designing resilient, secure, and scalable cloud environments utilizing services such as EC2, S3, Lambda, VPC (AWS) and Virtual Machines, Azure Functions, Azure Networking (Azure).
+        - Cloud Migration: Planning and executing seamless migrations with minimal disruption.
+        - AWS Startup Funding: Help startups qualify for AWS Credits funding.
+        - Linux Infrastructure Management: Deep expertise in administration, troubleshooting, and performance tuning.
+        - DevOps & Automation: Implementing CI/CD pipelines, Infrastructure as Code (IaC) using tools like Docker, Kubernetes, Terraform, and Ansible.
+        - Problem Solving & Optimization: Identifying technical challenges and optimizing systems for performance and cost, resulting upto 20% reduction in cloud expenditure.
+      keywords:
+        - Cloud Migration
+        - Cloud Consulting
+        - AWS
+        - Mentorship
+        - Linux Administration
+        - DevOps
+        - Startup Funding
+    - name: Minfy Technologies
+      url: https://www.minfytech.com/
+      startDate: Oct 1, 2022
+      endDate: Jan 1, 2024
+      position: Migration SME & Solution Architect
+      summary: |
+        - Design, architect next generation container based automation solutions on a public Cloud Infrastructure.
+        - Define common development processes, platform and tools usage for automation solutions.
+        - Serve as a systems and automation evangelist providing thought leadership, participating in conferences, authoring white papers, etc.
+        - Provide technical leadership, project guidance in various deployment & monitoring automation technology areas.
+      keywords:
+        - AWS
+        - Well-Architected Framework
+        - Cloud Migration
+        - Consulting
+        - Linux Administration
+        - Managed Services
+        - Modernisation
+    - name: Doctodoor, LLC
+      url: https://doctodoor.com/
+      startDate: August 1, 2020
+      endDate: Nov 1, 2022
+      position: Solution Architect
+      summary: |
+        - Design, architect & migrate to AWS Cloud.
+        - Define common development processes, platform and tools usage for automation solutions.
+        - Serve as a systems and automation evangelist providing thought leadership, participating in conferences, authoring white papers, etc.
+        - Provide technical leadership, project guidance in various deployment & monitoring automation technology areas.
+      keywords:
+        - AWS
+        - Well-Architected Framework
+        - Cloud Migration
+        - Consulting
+        - Linux Administration
+        - Managed Services
+        - Modernisation
+        - Cloud Security
+  languages:
+    # Valid language fluency options:
+    #
+    # - 'Elementary Proficiency'
+    # - 'Limited Working Proficiency'
+    # - 'Minimum Professional Proficiency'
+    # - 'Full Professional Proficiency'
+    # - 'Native or Bilingual Proficiency'
+    - language: English
+      fluency: Native or Bilingual Proficiency
+      keywords:
+        - IELTS 7.5
+    - language: Hindi
+      fluency: Native or Bilingual Proficiency
+      keywords: []
+  skills:
+    # Valid level options:
+    #
+    # - 'Novice'
+    # - 'Beginner'
+    # - 'Intermediate'
+    # - 'Advanced'
+    # - 'Expert'
+    # - 'Master'
+    - name: DevOps
+      level: Expert
+      keywords:
+        - Python
+        - Kubernetes
+        - Docker
+        - Shell
+        - Ansible
+    - name: Linux
+      level: Expert
+      keywords:
+        - Ubuntu
+        - RockyLinux
+        - CentOS
+        - RHEL
+    - name: Data Structure
+      level: Expert
+      keywords:
+        - Python
+        - Bash
+        - Go        
+  awards: []
+  certificates:
+    - name: HIPAA Certificate
+      url: https://certificates.accountablehq.com/achievements/32a4e1d1-fcec-4d33-97ab-7c7093ede2ab?public_trainee
+      issuer: Accountable HQ
+      date: Mar 2025
+    - name: Migration Ambassador 2023 - Business
+      url: https://aws.amazon.com/certification/
+      issuer: AWS
+      date: Feb 2023
+    - name: AWS Well-Architected
+      url: https://aws.amazon.com/certification/
+      issuer: AWS
+      date: Jan 2023   
+    - name: AWS Partner Accreditation (Technical)
+      url: https://aws.amazon.com/certification/
+      issuer: AWS
+      date: Nov 2022  
+  publications:
+    - publisher: Self
+      url: https://github.com/iamarya2k24/mytechtalks
+      name: Lightening talk on Self-hosted Gitea
+      releaseDate: Jan 2025
+      summary: |
+        - Presented a lightning talk on Gitea – a lightweight GitHub alternative built with Go to developers and open-source enthusiasts.
+        - Shared deployment strategies, use cases, and advantages of self-hosted code management systems.
+  references:
+    - name: Eliseo B
+      phone: null
+      relationship: Customer
+      email: null
+      summary: |
+        Extremely helpful on devops and misc. Linux environment. Has deep knowledge in a very broad realm of tech and is always quick to respond with solutions.
+  projects:
+    - name: SysVInit Generator
+      url: https://github.com/iamarya2k24/sysvinit-service-generator
+      description: This script enables fast daemonization apps as a Linux services with SysVinit init system.
+      startDate: Jul 2020
+      endDate: Dec 2020
+      summary: []
+      keywords:
+        - bash
+  interests:
+    - name: Sports
+      keywords:
+        - Football
+        - Badminton
+        - Bicycling
+        - Running
+    - name: Art
+      keywords:
+        - Inktober
+        - Sketching
+        - Abstract
+  volunteer:
+    - organization: Youngistaan Foundation
+      url: null
+      position: Volunteer
+      startDate: Jun 2024 
+      summary: |
+        - I am part of Hunger Heroes and climate action team!
+        - climate action - Understand city planning and make efforts to make cities people-centric and bicycle/pedestrian accessible. Make them green by reducing car dependency.
+
+layout:
+  locale:
+    # Use `yamlresume languages list` to get the list of supported languages
+    language: en
+  margins:
+    top: 2.5cm
+    left: 1.5cm
+    right: 1.5cm
+    bottom: 2.5cm
+  page:
+    showPageNumbers: true
+  # Use `yamlresume templates list` to get the list of available templates
+  template: moderncv-banking
+  typography:
+    # LaTeX engine only supports 10pt, 11pt, and 12pt
+    fontSize: 12pt

@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Résumé</title>
+<meta name="description" content="Résumé." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div id="state" role="status" aria-live="polite">Loading resume.yaml…</div>
+
+<main class="sheet" id="resume" hidden></main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+"use strict";
+
+/**
+ * resume.yaml is the sole source of truth. This follows the YAMLResume
+ * schema: everything lives under content.* (basics, location, profiles,
+ * work, skills, education, certificates, languages, publications,
+ * references, projects, interests, volunteer). layout.* is compiler
+ * config for the LaTeX/PDF path and is not used here, except locale.language
+ * for the page's lang attribute.
+ * ref: https://yamlresume.dev/docs/compiler/schema
+ */
+
+const YAML_PATH = "resume.yaml";
+
+function esc(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/** Minimal inline markdown: **bold**, *italic*, [text](url). Escapes first. */
+function mdInline(str) {
+  let s = esc(str);
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) =>
+    `<a href="${esc(url)}" target="_blank" rel="noopener">${text}</a>`);
+  s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  s = s.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>");
+  return s;
+}
+
+/** Parses a "- line\n- line" markdown block into an array of inline-rendered lines. */
+function mdBullets(text) {
+  if (!text) return [];
+  return String(text)
+    .split("\n")
+    .map(l => l.trim())
+    .filter(Boolean)
+    .map(l => l.replace(/^-\s*/, ""))
+    .filter(Boolean)
+    .map(mdInline);
+}
+
+function fmtDate(d) {
+  if (!d) return "";
+  const parsed = new Date(d);
+  if (isNaN(parsed)) return esc(d);
+  return parsed.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+}
+
+function dateRange(start, end) {
+  const s = fmtDate(start);
+  const e = end ? fmtDate(end) : "Present";
+  return s ? `${s} – ${e}` : e;
+}
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+function renderHeader(basics, location, profiles) {
+  const metaBits = [];
+  if (basics.email) metaBits.push(`<span><a href="mailto:${esc(basics.email)}">${esc(basics.email)}</a></span>`);
+  if (basics.phone) metaBits.push(`<span>${esc(basics.phone)}</span>`);
+  if (location && (location.city || location.region || location.country)) {
+    const locParts = [location.city, location.region, location.country].filter(Boolean).map(esc).join(", ");
+    metaBits.push(`<span>${locParts}</span>`);
+  }
+  if (basics.url) metaBits.push(`<span><a href="${esc(basics.url)}" target="_blank" rel="noopener">${esc(basics.url.replace(/^https?:\/\//, ""))}</a></span>`);
+  (profiles || []).forEach(p => {
+    metaBits.push(`<span><a href="${esc(p.url)}" rel="me noopener" target="_blank">${esc(p.network)}: ${esc(p.username)}</a></span>`);
+  });
+
+  const summaryBullets = mdBullets(basics.summary);
+
+  return `
+  <header class="header">
+    <span class="corner-l"></span><span class="corner-r"></span>
+    <p class="eyebrow">Résumé / v1</p>
+    <h1 class="name">${esc(basics.name)}</h1>
+    <p class="headline">${esc(basics.headline)}</p>
+    <div class="meta-row">
+      ${metaBits.join("")}
+    </div>
+    ${summaryBullets.length ? `
+      <ul class="summary-list">
+        ${summaryBullets.map(b => `<li>${b}</li>`).join("")}
+      </ul>` : ""}
+  </header>`;
+}
+
+function renderWork(work) {
+  if (!work || !work.length) return "";
+  const items = work.map((job, i) => {
+    const bullets = mdBullets(job.summary);
+    return `
+    <article class="entry">
+      <span class="entry-index" aria-hidden="true">${pad2(i + 1)}</span>
+      <div class="entry-head">
+        <h3 class="entry-role">${esc(job.position)} — <span class="entry-org">${job.url ? `<a href="${esc(job.url)}" target="_blank" rel="noopener">${esc(job.name)}</a>` : esc(job.name)}</span></h3>
+        <span class="entry-dates">${dateRange(job.startDate, job.endDate)}</span>
+      </div>
+      ${bullets.length ? `<ul>${bullets.map(b => `<li>${b}</li>`).join("")}</ul>` : ""}
+      ${job.keywords && job.keywords.length ? `
+        <div class="tag-row">
+          ${job.keywords.map(t => `<span class="tag">${esc(t)}</span>`).join("")}
+        </div>` : ""}
+    </article>`;
+  }).join("");
+
+  return `
+  <section class="section" aria-labelledby="experience-title">
+    <h2 class="section-title" id="experience-title">Experience</h2>
+    ${items}
+  </section>`;
+}
+
+function renderProjects(projects) {
+  if (!projects || !projects.length) return "";
+  const cards = projects.map(p => {
+    const bullets = mdBullets(p.summary);
+    return `
+    <article class="card">
+      <div class="entry-head">
+        <h3>${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.name)}</a>` : esc(p.name)}</h3>
+        ${(p.startDate || p.endDate) ? `<span class="entry-dates">${dateRange(p.startDate, p.endDate)}</span>` : ""}
+      </div>
+      ${p.description ? `<p>${mdInline(p.description)}</p>` : ""}
+      ${bullets.length ? `<ul>${bullets.map(b => `<li>${b}</li>`).join("")}</ul>` : ""}
+      ${p.keywords && p.keywords.length ? `
+        <div class="tag-row">
+          ${p.keywords.map(t => `<span class="tag">${esc(t)}</span>`).join("")}
+        </div>` : ""}
+    </article>`;
+  }).join("");
+
+  return `
+  <section class="section" aria-labelledby="projects-title">
+    <h2 class="section-title" id="projects-title">Projects</h2>
+    <div class="card-grid">${cards}</div>
+  </section>`;
+}
+
+function renderSkills(skills) {
+  if (!skills || !skills.length) return "";
+  const groups = skills.map(g => `
+    <div class="skill-group">
+      <p class="skill-cat">${esc(g.name)}${g.level ? ` <span class="skill-level">· ${esc(g.level)}</span>` : ""}</p>
+      <div class="tag-row">
+        ${(g.keywords || []).map(s => `<span class="tag">${esc(s)}</span>`).join("")}
+      </div>
+    </div>`).join("");
+
+  return `
+  <section class="section" aria-labelledby="skills-title">
+    <h2 class="section-title" id="skills-title">Skills</h2>
+    ${groups}
+  </section>`;
+}
+
+function renderEducation(education) {
+  if (!education || !education.length) return "";
+  const items = education.map(e => `
+    <div class="edu-item">
+      <div>
+        <div class="edu-degree">${esc(e.degree)}${e.area ? `, ${esc(e.area)}` : ""}</div>
+        <div>${esc(e.institution)}</div>
+      </div>
+      <div class="edu-meta">${dateRange(e.startDate, e.endDate)}</div>
+    </div>`).join("");
+
+  return `
+  <section class="section" aria-labelledby="education-title">
+    <h2 class="section-title" id="education-title">Education</h2>
+    ${items}
+  </section>`;
+}
+
+function renderCertificates(certificates) {
+  if (!certificates || !certificates.length) return "";
+  const items = certificates.map(c => `
+    <div class="cert-item">
+      <div class="cert-name">${c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.name)}</a>` : esc(c.name)}</div>
+      <div class="cert-meta">${esc(c.issuer)} · ${esc(c.date)}</div>
+    </div>`).join("");
+
+  return `
+  <section class="section" aria-labelledby="certs-title">
+    <h2 class="section-title" id="certs-title">Certificates</h2>
+    ${items}
+  </section>`;
+}
+
+function renderLanguages(languages) {
+  if (!languages || !languages.length) return "";
+  const items = languages.map(l => `
+    <span class="tag">${esc(l.language)} — ${esc(l.fluency)}${l.keywords && l.keywords.length ? ` (${l.keywords.map(esc).join(", ")})` : ""}</span>
+  `).join("");
+
+  return `
+  <section class="section" aria-labelledby="languages-title">
+    <h2 class="section-title" id="languages-title">Languages</h2>
+    <div class="tag-row">${items}</div>
+  </section>`;
+}
+
+function renderPublications(publications) {
+  if (!publications || !publications.length) return "";
+  const items = publications.map(p => {
+    const bullets = mdBullets(p.summary);
+    return `
+    <article class="card">
+      <div class="entry-head">
+        <h3>${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.name)}</a>` : esc(p.name)}</h3>
+        ${p.releaseDate ? `<span class="entry-dates">${fmtDate(p.releaseDate)}</span>` : ""}
+      </div>
+      ${p.publisher ? `<p class="entry-loc">${esc(p.publisher)}</p>` : ""}
+      ${bullets.length ? `<ul>${bullets.map(b => `<li>${b}</li>`).join("")}</ul>` : ""}
+    </article>`;
+  }).join("");
+
+  return `
+  <section class="section" aria-labelledby="pubs-title">
+    <h2 class="section-title" id="pubs-title">Publications</h2>
+    <div class="card-grid">${items}</div>
+  </section>`;
+}
+
+function renderVolunteer(volunteer) {
+  if (!volunteer || !volunteer.length) return "";
+  const items = volunteer.map((v, i) => {
+    const bullets = mdBullets(v.summary);
+    return `
+    <article class="entry">
+      <span class="entry-index" aria-hidden="true">${pad2(i + 1)}</span>
+      <div class="entry-head">
+        <h3 class="entry-role">${esc(v.position)} — <span class="entry-org">${esc(v.organization)}</span></h3>
+        <span class="entry-dates">${dateRange(v.startDate, v.endDate)}</span>
+      </div>
+      ${bullets.length ? `<ul>${bullets.map(b => `<li>${b}</li>`).join("")}</ul>` : ""}
+    </article>`;
+  }).join("");
+
+  return `
+  <section class="section" aria-labelledby="volunteer-title">
+    <h2 class="section-title" id="volunteer-title">Volunteer</h2>
+    ${items}
+  </section>`;
+}
+
+function renderInterests(interests) {
+  if (!interests || !interests.length) return "";
+  const groups = interests.map(g => `
+    <div class="skill-group">
+      <p class="skill-cat">${esc(g.name)}</p>
+      <div class="tag-row">
+        ${(g.keywords || []).map(k => `<span class="tag">${esc(k)}</span>`).join("")}
+      </div>
+    </div>`).join("");
+
+  return `
+  <section class="section" aria-labelledby="interests-title">
+    <h2 class="section-title" id="interests-title">Interests</h2>
+    ${groups}
+  </section>`;
+}
+
+function renderReferences(references) {
+  if (!references || !references.length) return "";
+  const items = references.map(r => `
+    <blockquote class="reference">
+      <p>${mdInline((r.summary || "").trim())}</p>
+      <footer>— ${esc(r.name)}${r.relationship ? `, ${esc(r.relationship)}` : ""}</footer>
+    </blockquote>`).join("");
+
+  return `
+  <section class="section" aria-labelledby="refs-title">
+    <h2 class="section-title" id="refs-title">References</h2>
+    ${items}
+  </section>`;
+}
+
+function renderFooter(basics, buildInfo) {
+  const year = new Date().getFullYear();
+  let buildBit = "Rendered from resume.yaml";
+  if (buildInfo && buildInfo.sha) {
+    const link = buildInfo.repo
+      ? `<a href="https://github.com/${esc(buildInfo.repo)}/commit/${esc(buildInfo.shaFull || buildInfo.sha)}" target="_blank" rel="noopener">${esc(buildInfo.sha)}</a>`
+      : esc(buildInfo.sha);
+    const built = buildInfo.builtAt ? ` · built ${fmtDate(buildInfo.builtAt)}` : "";
+    buildBit = `commit ${link}${built}`;
+  }
+  return `
+  <footer class="footer">
+    <span>${esc(basics.name)} — updated ${year}</span>
+    <span>${buildBit}</span>
+  </footer>`;
+}
+
+async function fetchBuildInfo() {
+  try {
+    const res = await fetch("build-info.json", { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null; // absent locally / outside the Actions build — footer just omits it
+  }
+}
+
+async function main() {
+  const stateEl = document.getElementById("state");
+  const rootEl = document.getElementById("resume");
+
+  try {
+    const [res, buildInfo] = await Promise.all([
+      fetch(YAML_PATH, { cache: "no-store" }),
+      fetchBuildInfo()
+    ]);
+    if (!res.ok) throw new Error(`Fetched resume.yaml with status ${res.status}`);
+    const text = await res.text();
+    const doc = jsyaml.load(text);
+
+    const data = doc && doc.content;
+    if (!data || !data.basics) throw new Error("resume.yaml is missing a content.basics section");
+
+    if (doc.layout && doc.layout.locale && doc.layout.locale.language) {
+      document.documentElement.lang = doc.layout.locale.language;
+    }
+
+    document.title = `${data.basics.name} — ${data.basics.headline || "Résumé"}`;
+
+    rootEl.innerHTML = [
+      renderHeader(data.basics, data.location, data.profiles),
+      renderWork(data.work),
+      renderSkills(data.skills),
+      renderProjects(data.projects),
+      renderEducation(data.education),
+      renderCertificates(data.certificates),
+      renderLanguages(data.languages),
+      renderPublications(data.publications),
+      renderVolunteer(data.volunteer),
+      renderInterests(data.interests),
+      renderReferences(data.references),
+      renderFooter(data.basics, buildInfo)
+    ].join("\n");
+
+    stateEl.hidden = true;
+    rootEl.hidden = false;
+  } catch (err) {
+    stateEl.textContent = `Could not load résumé: ${err.message}`;
+    console.error(err);
+  }
+}
+
+main();
+</script>
+</body>
+</html>

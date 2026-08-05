@@ -1,0 +1,346 @@
+/* ============================================================
+   Design tokens
+   Direction: component-datasheet / PCB silkscreen aesthetic —
+   fits a candidate whose work is literally reading spec sheets
+   and taking hardware apart. Paper-grey field, hairline grid
+   rules, soldermask-green primary accent, copper used once as
+   the signature mark.
+   ============================================================ */
+:root {
+  --paper: #f7f6f2;
+  --surface: #ffffff;
+  --ink: #1b1f1d;
+  --ink-soft: #5b625e;
+  --line: #d8d6ce;
+  --line-strong: #b9b7ac;
+  --accent: #2f5d50;       /* soldermask green */
+  --accent-soft: #e4ebe8;
+  --copper: #b5651d;       /* used once: signature mark only */
+
+  --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --sans: "IBM Plex Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --gap: clamp(1.25rem, 2vw, 2rem);
+  --radius: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14171a;
+    --surface: #1b1f22;
+    --ink: #e9e7e0;
+    --ink-soft: #9aa19c;
+    --line: #33383a;
+    --line-strong: #454b4d;
+    --accent: #6fae98;
+    --accent-soft: #1f2c28;
+    --copper: #d68a4a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 100% 2.5rem, 2.5rem 100%;
+  background-position: 0 0;
+  background-attachment: local;
+}
+
+@media (max-width: 640px) {
+  body { background-image: none; }
+}
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--copper); }
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 2px;
+}
+
+.sheet {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--gap);
+}
+
+#state {
+  max-width: 760px;
+  margin: 3rem auto;
+  padding: 0 var(--gap);
+  font-family: var(--mono);
+  color: var(--ink-soft);
+}
+#state[hidden] { display: none; }
+
+/* ---- Header: datasheet part label ---- */
+.header {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  margin-top: var(--gap);
+}
+.header::before,
+.header::after,
+.header .corner-l,
+.header .corner-r {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--copper);
+}
+.header::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.header::after { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.header .corner-l { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.header .corner-r { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.5rem;
+}
+
+.name {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 5vw, 2.25rem);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.headline {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  margin: 0.35rem 0 1rem;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  border-top: 1px dashed var(--line);
+  padding-top: 0.85rem;
+}
+.meta-row a { color: var(--ink); }
+.meta-row a:hover { color: var(--copper); }
+
+.summary {
+  margin-top: 1.1rem;
+  max-width: 62ch;
+}
+
+.summary-list {
+  margin: 1.1rem 0 0;
+  padding-left: 1.1rem;
+  max-width: 62ch;
+}
+.summary-list li { margin-bottom: 0.3rem; }
+
+/* ---- Section shell ---- */
+.section {
+  margin-top: 2.25rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.9rem;
+}
+.section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+/* ---- Experience ---- */
+.entry {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem 1.05rem 3rem;
+  margin-bottom: 0.9rem;
+}
+.entry-index {
+  position: absolute;
+  left: 0.9rem;
+  top: 1.05rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.entry-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+  align-items: baseline;
+}
+.entry-role { font-weight: 600; margin: 0; }
+.entry-org { color: var(--accent); font-weight: 600; }
+.entry-dates {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.entry-loc {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 0.1rem 0 0.6rem;
+}
+.entry ul {
+  margin: 0.4rem 0 0.7rem;
+  padding-left: 1.1rem;
+}
+.entry li { margin-bottom: 0.3rem; }
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.tag {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.15rem 0.45rem;
+}
+
+/* ---- Projects / skills / education grids ---- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.85rem;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.95rem 1.05rem;
+}
+.card h3 {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+}
+.card p {
+  margin: 0 0 0.6rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.skill-group {
+  margin-bottom: 0.85rem;
+}
+.skill-cat {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.4rem;
+}
+.skill-level {
+  color: var(--accent);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.reference {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  margin: 0 0 0.9rem;
+  padding: 0.9rem 1.1rem;
+}
+.reference p { margin: 0 0 0.5rem; }
+.reference footer {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.edu-item, .cert-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+.edu-item:last-child, .cert-item:last-child { border-bottom: none; }
+.edu-degree, .cert-name { font-weight: 600; }
+.edu-meta, .cert-meta {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+/* ---- Footer ---- */
+.footer {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .entry { padding-left: 1.1rem; }
+  .entry-index { display: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .entry, .card { transition: border-color 0.15s ease; }
+  .entry:hover, .card:hover { border-color: var(--accent); }
+}
+
+@media print {
+  body { background: #fff; }
+  .header, .entry, .card { border-color: #999; }
+}
